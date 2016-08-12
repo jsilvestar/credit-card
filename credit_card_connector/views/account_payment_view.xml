@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- Payment view -->
+	<record model="ir.ui.view" id="view_account_payment_form_cc">
+		<field name="name">account.payment.form.cc</field>
+		<field name="model">account.payment</field>
+		<field name="inherit_id" ref="account.view_account_payment_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='journal_id']" position="after">
+				<field name="invoice_addr_id" string="Billing address" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" attrs="{'readonly': [('state','not in',['draft'])]}" />
+				<field name="cim_id" invisible="1" />
+				<field name="cim_payment_id" options="{'no_create': True}" attrs="{'invisible':['|',('cim_id','=',False),('new_card','=',True)], 'readonly':[('state','not in',['draft'])]}" />
+			</xpath>
+			<xpath expr="//group/group[1]" position="after">
+				<newline />
+				<group>
+					<field name="last_four" invisible="True" />
+					<field name="use_cc" invisible="True" />
+					<field name="show_new_card" invisible="True" />
+					<field name="new_card" attrs="{'readonly': [('state','not in',['draft'])], 'invisible':['|',('show_new_card','=',False),('use_cc','=',False)]}" />
+				</group>
+				<newline />
+				<group string="Card Number" attrs="{'invisible': ['|','|','|',('show_new_card','=',False),('state','not in',['draft']),('use_cc','=',False),('last_four','!=',False)]}">
+					<div>
+						<field name="cc_number" placeholder="Card number..." attrs="{'invisible': [('new_card','=',False)]}" />
+						<div>
+							<field name="cc_cvv" style="width: 30%%" placeholder="CVV..." />
+							<field name="cc_exp_month" style="width: 20%%" placeholder="Month in MM..." attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+							<label string="/" attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+							<field name="cc_exp_year" style="width: 20%%" placeholder="Year in YYYY..." attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+						</div>
+					</div>
+				</group>
+				<group string="Billing Info" attrs="{'invisible': ['|','|','|',('show_new_card','=',False),('use_cc','=',False),('last_four','!=',False),('new_card','=',False)]}">
+					<div>
+						<div>
+							<field name="bill_firstname" style="width: 45%%" placeholder="First name" />
+							<field name="bill_lastname" style="width: 45%%" placeholder="Last name" />
+						</div>
+						<div>
+							<field name="bill_street" placeholder="Street" />
+							<field name="city_state_zip" placeholder="City/State/Zip" />
+						</div>
+					</div>
+				</group>
+				<newline />
+			</xpath>
+			<xpath expr="//sheet" position="inside">
+			<notebook>
+				<page string="CC Transaction" attrs="{'invisible':['|',('cim_id','=',False),('state','!=','posted')]}">
+					<field name="transaction_ids">
+						<tree>
+							<field name="trans_date" />
+							<field name="pim_id" />
+							<field name="trans_id" />
+							<field name="amount" />
+						</tree>
+					</field>
+				</page>
+			</notebook>
+			</xpath>
+			<xpath expr="//field[@name='name']" position="after">
+				<field name="transId" invisible="1" />
+			</xpath>
+			
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="payment_cancel_form_inherit_cc">
+            <field name="name">payment.cancel.form.inherit.cc</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account_cancel.payment_cancel_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='cancel']" position="attributes">
+					<attribute name="attrs">{'invisible':['|',('use_cc','=',True),('state','!=','posted')]}</attribute>
+					<attribute name="states"></attribute>
+				</xpath>
+            </field>
+        </record>
+	
+	<!-- Payment view from Invoice Register payment -->
+	<record model="ir.ui.view" id="view_account_payment_invoice_form_cc">
+		<field name="name">account.payment.form.cc</field>
+		<field name="model">account.payment</field>
+		<field name="inherit_id" ref="account.view_account_payment_invoice_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='journal_id']" position="after">
+				<field name="invoice_addr_id" string="Billing address" domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]" attrs="{'readonly': [('state','not in',['draft'])]}" />
+				<field name="cim_id" invisible="1" />
+				<field name="cim_payment_id" options="{'no_create': True}" attrs="{'invisible':['|',('cim_id','=',False),('new_card','=',True)], 'readonly':[('state','not in',['draft'])]}" />
+			</xpath>
+			<xpath expr="//group/group[1]" position="after">
+				<newline />
+				<group>
+					<field name="last_four" invisible="True" />
+					<field name="use_cc" invisible="True" />
+					<field name="show_new_card" invisible="True" />
+					<field name="new_card" attrs="{'readonly': [('state','not in',['draft'])], 'invisible':['|',('show_new_card','=',False),('use_cc','=',False)]}" />
+				</group>
+				<newline />
+				<group string="Card Number" attrs="{'invisible': ['|','|','|',('show_new_card','=',False),('state','not in',['draft']),('use_cc','=',False),('last_four','!=',False)]}">
+					<div>
+						<field name="cc_number" placeholder="Card number..." attrs="{'invisible': [('new_card','=',False)]}" />
+						<div>
+							<field name="cc_cvv" style="width: 30%%" placeholder="CVV..." />
+							<field name="cc_exp_month" style="width: 20%%" placeholder="Month in MM..." attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+							<label string="/" attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+							<field name="cc_exp_year" style="width: 20%%" placeholder="Year in YYYY..." attrs="{'invisible': [('new_card','=',False)]}" class="oe_inline" />
+						</div>
+					</div>
+				</group>
+				<group string="Billing Info" attrs="{'invisible': ['|','|','|',('show_new_card','=',False),('use_cc','=',False),('last_four','!=',False),('new_card','=',False)]}">
+					<div>
+						<div>
+							<field name="bill_firstname" style="width: 45%%" placeholder="First name" />
+							<field name="bill_lastname" style="width: 45%%" placeholder="Last name" />
+						</div>
+						<div>
+							<field name="bill_street" placeholder="Street" />
+							<field name="city_state_zip" placeholder="City/State/Zip" />
+						</div>
+					</div>
+				</group>
+				<newline />
+			</xpath>
+			<xpath expr="//sheet" position="inside">
+			<notebook>
+				<page string="CC Transaction" attrs="{'invisible':['|',('cim_id','=',False),('state','!=','posted')]}">
+					<field name="transaction_ids">
+						<tree>
+							<field name="trans_date" />
+							<field name="pim_id" />
+							<field name="trans_id" />
+							<field name="amount" />
+						</tree>
+					</field>
+				</page>
+			</notebook>
+			</xpath>
+			<xpath expr="//field[@name='state']" position="after">
+				<field name="transId" invisible="1" />
+			</xpath>
+		</field>
+	</record>
+	
+</data>
+</openerp>

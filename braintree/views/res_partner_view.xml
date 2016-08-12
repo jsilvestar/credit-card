@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_partner_property_form_cim" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="credit_card_connector.view_partner_property_form_cim" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='create_payment_profile']" position="replace" />
+            </field>
+        </record>
+    </data>
+</openerp>

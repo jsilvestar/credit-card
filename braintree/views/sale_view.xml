@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="view_order_form_inherit">
+			<field name="name">sale.order.form.inherit</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='payment_term_id']" position="after">
+					<field name="cim_id" options="{'no_create': True}" invisible="1"/>
+					<label for="cim_payment_id" />
+					<div>
+						<field name="cim_payment_id" nolabel="1" options="{'no_create': True}" style=""/>
+						<group>
+							<div>
+								<button name="add_creditcard" type="object" string="Add a card"
+									icon="fa-credit-card" />
+								<label string=" " />
+								<button name="update_all_payment_methods" type="object"
+									string="Update all cards" icon="fa-credit-card"/>
+							</div>
+						</group>
+					</div>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

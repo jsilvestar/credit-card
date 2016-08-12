@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<template id="simple_page" name="Braintree Payment method">
+			<t t-call="website.layout">
+				<form id="checkout" method="post"
+					t-attf-action="#{url}" enctype="multipart/form-data">
+					<input type="hidden" t-attf-value="#{token}" name="token_value" />
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+					<div id="payment-form" />
+					<button class="btn btn-primary btn-lg">Submit</button>
+				</form>
+
+				<script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+				<script>
+					// We generated a client token for you so you can test out this code
+					// immediately. In a production-ready integration, you will need to
+					// generate a client token on your server (see section below).
+					var clientToken = document.getElementById('checkout').elements[0].value;
+					// console.log(clientToken)
+					braintree.setup(clientToken, "dropin", {
+						container: "payment-form"
+					});
+				</script>
+			</t>
+		</template>
+	</data>
+</openerp>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- Payment view -->	
+	<record model="ir.ui.view" id="payment_cancel_form_inherit_cc">
+            <field name="name">payment.cancel.form.inherit.cc</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="credit_card_connector.payment_cancel_form_inherit_cc"/>
+            <field name="arch" type="xml">
+				<xpath expr="//button[@name='cancel']" position="after">
+					<button name="void_payment" string="Void" type="object"
+					confirm="Are you sure to void this credit card transaction?"
+					attrs="{'invisible':['|',('use_cc','=',False),('state','!=','posted')]}" />
+				</xpath>
+            </field>
+        </record>
+	
+</data>
+</openerp>
